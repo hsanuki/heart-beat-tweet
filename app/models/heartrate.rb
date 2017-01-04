@@ -4,9 +4,6 @@ class Heartrate < ActiveRecord::Base
   def get_heartrates(access_token, acqusition_beforetime_min)
     starttime, endtime = calc_starttime_endtime(acqusition_beforetime_min)
     # binding.pry
-    require "pp"
-    pp starttime
-    pp endtime
     today = Time.current.strftime("%Y-%m-%d")
     res = RestClient.get "https://api.fitbit.com/1/user/-/activities/heart/date/#{today}/1d/1min/time/#{starttime}/#{endtime}.json", {'Authorization' => "Bearer #{access_token}"}
     res_parsed = JSON.parse(res)

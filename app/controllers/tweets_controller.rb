@@ -11,10 +11,7 @@ class TweetsController < ApplicationController
     @comments = @tweet.comments.includes(:user)
     if @tweet[:heartrate_flag] then
       heartrates = Heartrate.find_by(tweet_id: params[:id])
-      require "pp"
-      pp heartrates
       @heartrates = heartrates[:heart_rates].collect{|i| [Time.zone.parse(i["time"]), i["value"]]}
-      pp @heartrates
       # 最大心拍数及び最小心拍数を指定する
       margin_tick = 10
       @max_tick = @tweet[:max_heartrate] + margin_tick
@@ -65,9 +62,6 @@ class TweetsController < ApplicationController
     if @is_token_valid_user then
       token = Usertoken.find_by(user_id: current_user[:id])
       # tokenが有効かどうか判定する→ダメだったら更新する
-      require "pp"
-      pp Time.now()
-      pp token[:expires_at]
       if Time.now() > token[:expires_at]
         Usertoken.refresh_token(token)
       end
