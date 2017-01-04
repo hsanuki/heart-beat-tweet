@@ -30,7 +30,6 @@ class TweetsController < ApplicationController
     end
   end
 
-
   def search
     query = "#{params[:keyword]}"
     # 検索する心拍数を取得する
@@ -41,15 +40,11 @@ class TweetsController < ApplicationController
     else
       bpm = nil
     end
-
     # 検索する文字列を取得する
     query.slice!(/[0-9]+bpm/)
-
     # 検索結果を@tweetsに格納する
     if bpm.nil? && query==""
-      # 初期検索画面では検索結果を表示しない．
-      # ここにランキングを作成する帰納を設ける
-      @tweets = Tweet.where("text like (?)", "aaaaaaaaa").page(params[:page]).per(5)
+      @tweets = []
     elsif bpm.nil?
       @tweets = Tweet.where("text like (?)", "%#{query}%").page(params[:page]).per(5).order("created_at DESC")
     else
@@ -59,6 +54,7 @@ class TweetsController < ApplicationController
 
 
   def new
+    @tweet = Tweet.new
   end
 
   # ツイート新規作成
@@ -70,7 +66,7 @@ class TweetsController < ApplicationController
         Usertoken.refresh_token(token)
       end
       heartrate = Heartrate.new
-      heartrate.get_heartrates(token[:access_token], tweet_params[:acqusition_beforetime_min].to_i)
+      heartrate.get_heartrates(token[:access_token], params[:acqusition_beforetime_min].to_i)
       min_heartrate, max_heartrate = heartrate.get_minmax_heartrate()
       heartrate_flag = true
       if min_heartrate.nil?
@@ -81,15 +77,13 @@ class TweetsController < ApplicationController
       max_heartrate = nil
       heartrate_flag = false
     end
-    # TODO: ここHerokuにアップロード時に修正する
+
     tweet_saved = {min_heartrate: min_heartrate, max_heartrate: max_heartrate, text: tweet_params[:text], user_id: current_user.id, heartrate_flag: heartrate_flag}
-    if tweet_params[:image]!=""
-      file_image = File.new("app/assets/images/#{tweet_params[:image]}", "r")
-      tweet_saved["image"] = file_image
+    if not(tweet_params[:image].nil?)
+      tweet_saved["image"] = tweet_params[:image]
     end
-    if tweet_params[:movie]!=""
-      file_movie = File.new("app/assets/movies/#{tweet_params[:movie]}", "r")
-      tweet_saved["movie"] = file_movie
+    if not(tweet_params[:movie].nil?)
+      tweet_saved["movie"] = tweet_params[:movie]
     end
     tweet = Tweet.create(tweet_saved)
     tweet_id = tweet[:id]
@@ -98,7 +92,6 @@ class TweetsController < ApplicationController
       heartrate.save_hr(tweet_id)
       User.update_heartrate_params(current_user[:id], heartrate.get_mean_heartrate())
     end
-
   end
 
   # ツイート削除
@@ -112,27 +105,16 @@ class TweetsController < ApplicationController
   end
 
   def update
+    # binding.pry
     tweet = Tweet.find(params[:id])
-    tweet_update_params = {}
-    if tweet.user_id == current_user.id
-      if tweet_params[:image]!=""
-        file_image = File.new("app/assets/images/#{tweet_params[:image]}", "r")
-        tweet_update_params["image"] = file_image
-      end
-      if tweet_params[:movie]!=""
-        file_movie = File.new("app/assets/movies/#{tweet_params[:movie]}", "r")
-        tweet_update_params["movie"] = file_movie
-      end
-      tweet_update_params[:text] = tweet_params[:text]
-      tweet.update(tweet_update_params)
-    end
+    tweet.update(tweet_params)
   end
 
   private
   # ストロングパラメータの生成
   def tweet_params
     # form_tagから送られてきた情報の利用
-    params.permit(:text, :acqusition_beforetime_min, :image, :movie)
+    params.require(:tweet).permit(:text, :acqusition_beforetime_min, :image, :movie)
   end
 
   def move_to_signin

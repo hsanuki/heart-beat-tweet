@@ -6,13 +6,6 @@
  * http://ipafont.ipa.go.jp/（IPAフォントのURL）
  * http://ipafont.ipa.go.jp/ipa_font_license_v1.html（IPAフォントライセンスv1.0のURL）
  */
- // 用いるオリジナルなフォントの設定
-@font-face {
-    font-family: 'ほのか明朝';
-    src: url('font_1_honokamin.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
 // 色の取得
 // @import url(http://fonts.googleapis.com/css?family=Unica+One);
@@ -142,22 +135,6 @@ p {
 // http://touch-slide.jp/column/304/ （ボタンの設計参考にする）
 // 全体の大きさ以外可変になっている（色のつけ方・フォントサイズは固定？）
 // Question: デフォルトの値をどこで定義するようにしたほうがよいのか．
-.btn {
-    @include basePadding(8px 20px);
-    font-size: 14px;
-    border: 2px solid $accent;
-    color: $accent;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 3px;
-    display: inline-block;
-  &:hover {
-    // lighten 相対的に色を指定する
-    border-color: lighten($accent, 15%);
-    color: lighten($accent, 15%);
-  }
-}
-
 .line{
   display: block;
   position: relative;
@@ -584,9 +561,6 @@ form {
   text-align: center;
   background-color: $gray;
   @include boxBase($margin_post $margin_post 0 $margin_post, 0);
-  width: 30%;
-  position: relative;
-  left: 33%;
 }
 
 nav.pagination {

@@ -8,8 +8,8 @@ Rails.application.configure do
     :address => "smtp.gmail.com",
     :port => 587,
     :domain => 'heart-beat-tweet.herokuapp.com',
-    :user_name => "sanukiharuyukisanuki@gmail.com", #ご自身のgmailアドレス
-    :password => "69826982", #ご自身のgmailアドレスのパスワード
+    :user_name => ENV["GMAIL_ACCOUNT"], #ご自身のgmailアドレス
+    :password => ENV["GMAIL_PASSWORD"], #ご自身のgmailアドレスのパスワード
     :authentication => 'plain'
   }
 

@@ -53,6 +53,7 @@ gem "chartkick"
 gem 'kaminari'
 gem 'devise'
 gem 'paperclip'
+gem 'dotenv-rails'
 
 group :production, :staging do
   gem 'rails_12factor'
