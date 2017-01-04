@@ -33,7 +33,7 @@ class Heartrate < ActiveRecord::Base
   private
   def calc_starttime_endtime(acqusition_beforetime_min)
     time_interval = 30 # 何分間の心拍数を取得するか
-    day = Time.now
+    day = Time.current
     startdatetime = day - (acqusition_beforetime_min + (time_interval / 2)) * 60
     enddatetime = day - (acqusition_beforetime_min - (time_interval / 2)) * 60
     if startdatetime.day != enddatetime.day
