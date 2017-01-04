@@ -11,7 +11,10 @@ class TweetsController < ApplicationController
     @comments = @tweet.comments.includes(:user)
     if @tweet[:heartrate_flag] then
       heartrates = Heartrate.find_by(tweet_id: params[:id])
-      @heartrates = heartrates[:heart_rates].collect{|i| [Time.parse(i["time"]), i["value"]]}
+      require "pp"
+      pp heartrates
+      @heartrates = heartrates[:heart_rates].collect{|i| [Time.zone.parse(i["time"]), i["value"]]}
+      pp @heartrates
       # 最大心拍数及び最小心拍数を指定する
       margin_tick = 10
       @max_tick = @tweet[:max_heartrate] + margin_tick
@@ -20,7 +23,7 @@ class TweetsController < ApplicationController
     if not(@tweet.user.hr_mean.nil?) then
       # 平均心拍数可視化のための準備
       middle_index = @heartrates.length / 2
-      @heartrates_mean = heartrates[:heart_rates].collect{|i| [Time.parse(i["time"]), @tweet.user.hr_mean]}
+      @heartrates_mean = heartrates[:heart_rates].collect{|i| [Time.zone.parse(i["time"]), @tweet.user.hr_mean]}
       if @tweet[:max_heartrate] < @tweet.user.hr_mean then
         @max_tick = @tweet.user.hr_mean + margin_tick
       end
