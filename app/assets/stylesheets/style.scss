@@ -1,0 +1,614 @@
+@import "compass";
+// cssにてベンダープレフィックスを利用するために用いる
+/*
+ * "ほのか明朝" licensed under the IPA Font License Agreement v1.0
+ * http://fontfree.me/966（配布元のURL）
+ * http://ipafont.ipa.go.jp/（IPAフォントのURL）
+ * http://ipafont.ipa.go.jp/ipa_font_license_v1.html（IPAフォントライセンスv1.0のURL）
+ */
+ // 用いるオリジナルなフォントの設定
+@font-face {
+    font-family: 'ほのか明朝';
+    src: url('font_1_honokamin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// 色の取得
+// @import url(http://fonts.googleapis.com/css?family=Unica+One);
+$accent: #57C3E9;
+$black: #292929;
+$dark: #666;
+$darkGray: #999999;
+$gray: #D8D8D8;
+$lightGray: #f5f5f3;
+$white: white;
+
+$lightblue4: #92C8DD;
+$lightblue3: #9DCCE0;
+$lightblue2: #A8CEDD;
+$lightblue1: #B3D1DD;
+
+
+// mixin
+// 関数としてscssを使う（呼び出す時は@includeを使う)
+// paddingは要素の内側を広げる
+// 値が1つ指定の場合は，上下左右いずれもXpx，
+// 値が2つ指定の場合は，上下がXpx，左右がYpx，
+// 値が3つ指定の場合は，上にXpx，左右にYpx，下にZpx
+// 値が4つ指定の場合は，上にXpx，左にYpx，下にZpx，右にZZpx
+// marginは要素の外側を広げる
+@mixin boxBase($margin: 30px auto, $padding: 10px) {
+  margin: $margin;
+  padding: $padding;
+}
+@mixin basePadding($padding: 10px) {
+  padding: $padding;
+}
+@mixin baseMargin($margin: 10px auto) {
+  margin: $margin;
+}
+
+
+// extend
+// 定義したスタイルを継承する．
+// 以降で使われているものは３つ．（.transition，.btn，.serif)
+
+// 画面いっぱいで高さを表示させる．
+// TODO: 背景色の色を変更する
+body,html {
+  height: 100%;
+}
+
+// headerとbodyタグの余白を設定する
+// paddingだからbodyの内側に背景色がつく
+// 上からデフォルトの値で下にいけばいくほど，適用範囲が小さくなる
+body {
+  padding-top: 100px;
+  // background-image: -moz-linear-gradient(left, $lightblue4 0%, $lightblue3 49%, $lightblue2 50%, $lightblue1 100%)
+  // background: webkit-gradient(linear, left top, left bottom, from($lightblue4), color-stop(0.49, $lightblue3), color-stop(0.50, $lightblue2), to($lightblue1))
+  background: linear-gradient(to right, $lightblue4, $lightblue3 20%, $lightblue2 80%, $lightblue1);
+}
+
+h1,h2,h3,h4,h5,h6,body {
+  // 文字高さの設定（全ての文字高さが大きくなる）
+  line-height: 1.5em;
+  // 文字間隔 (emとはフォントサイズを1emとする)
+  letter-spacing: 0.15em;
+  font-size: 25px;
+  // 文字のデフォルト色
+  color: $black;
+  // 文字のフォント
+  font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
+  // headerのマージンがここで設定されてる（けどなぜかここでは修正できない）
+  margin: 0;
+}
+
+a {
+  // テキストにunderlineとかoverlineとかつけるときに設定されてる
+  // 強調のhover時に下線を使おうとしているところがあるらしい．．
+  text-decoration: none;
+  color: $dark;
+  // 遷移時のスタイルを継承する
+  @extend .transition;
+  // ボタンにオンマウスの時に行うアクション
+  &:hover {
+    color: $accent;
+  }
+}
+
+p {
+  -webkit-margin-before:0.8em;
+  -webkit-margin-after:1.0em;
+}
+
+// 太字にする
+// ドットとはクラスのことを示している
+.bold {
+  font-weight: bold;
+}
+
+.gray{
+  color: $gray;
+}
+
+.serif {
+  font-family: 'ほのか明朝',serif;
+}
+
+.small{
+  // !important 強制的にこの処理を行う
+  font-size: 0.8em !important;
+}
+
+.big {
+  // !important 強制的にこの処理を行う
+  font-size: 1.2em !important;
+}
+
+// 文字を選択した際に何色にするか（hoverとは違う）
+::selection {
+  background: $gray;
+}
+
+// hoverさせた際にどれくらいの時間で何が（property）どのように（timing-function）変化するか
+.transition {
+  @include transition-property(all);
+  @include transition-duration(0.2s);
+  @include transition-timing-function(linear);
+}
+
+// ボタンの設定
+// http://touch-slide.jp/column/304/ （ボタンの設計参考にする）
+// 全体の大きさ以外可変になっている（色のつけ方・フォントサイズは固定？）
+// Question: デフォルトの値をどこで定義するようにしたほうがよいのか．
+.btn {
+    @include basePadding(8px 20px);
+    font-size: 14px;
+    border: 2px solid $accent;
+    color: $accent;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 3px;
+    display: inline-block;
+  &:hover {
+    // lighten 相対的に色を指定する
+    border-color: lighten($accent, 15%);
+    color: lighten($accent, 15%);
+  }
+}
+
+.line{
+  display: block;
+  position: relative;
+  border-top: 1px solid #d8d8d8;
+}
+
+// headの部分がどこに該当するかよくわからない．
+.title {
+  font-weight: bold;
+}
+.title--big {
+  font-size: 1.5em;
+  font-weight: bold;
+  i {
+    font-style: italic;
+    font-size: 1.8em;
+  }
+}
+
+// ヘッダーの設定
+$header_margin: 20px;
+$aicon_size: 56px;
+
+.img_class{
+  width: $aicon_size;
+  height: $aicon_size;
+}
+
+header.header {
+  // 外側の余白の大きさを決めている
+  // 子要素の大きさで高さが決まる
+  @include basePadding($header_margin);
+  // 境界線の設定
+  border-bottom: 2px solid $gray;
+  background-color: #fff;
+  // 全体のheaderの位置を指定する（fixedはスクロールしても位置が固定される）
+  position: fixed;
+  top: 0;
+  // 画面左端から
+  left: 0;
+  // 画面右端から
+  right: 0;
+  // どれだけ全面に出すか
+  z-index: 5;
+    // ナビゲーションバー
+  .user_nav {
+    position: absolute;
+    left: $header_margin;
+    // ナビゲーションバーのテキスト部分（今だとログインユーザー名）の設定（インライン要素の設定）
+    span {
+      display: block;
+      width: 320px;
+      font-size: 1em;
+      cursor: pointer;
+      position: relative;
+      // 記号挿入
+      &:after {
+        content: '▼';
+        font-size: .7em;
+        position: absolute;
+        top: 20%;
+      }
+      // リストを提示する
+      &:hover ul {
+        color: $accent;
+        display: block;
+      }
+    }
+    // ブロック要素部分の設定
+    // ulタグが全体の設定
+    ul {
+      display: none;
+      position: absolute;
+      // 間隔をどれくらい空けるか
+      top: -15px;
+      // どれだけずらすか
+      left: 75px;
+      border-right: 5px solid #d8d8d8;
+      // liタグが個々の要素の設定
+      li {
+        // リストの中に書かれているテキストの書き方を変える
+        a {
+          // displayは要素をブロック要素
+          font-size: 22px;
+          display: block;
+          padding: 5px 20px;
+          text-align: left;
+        }
+      }
+    }
+  }
+  .grid-right {
+    position: absolute;
+    right: $header_margin;
+    a {
+      margin-left: 20px;
+    }
+  }
+  .grid-center{
+    float: right;
+    position: relative;
+    // aicon_size変更時変更する必要あり．
+    right: calc(50% - 28px);
+  }
+}
+
+$avatar_size: 20%;
+$margin_post: 30px;
+$tweet_image_size: 100%;
+$tweet_image_width: 400px;
+$tweet_image_height: 400px;
+
+// コメントの投稿画面
+.comment_post{
+    @include boxBase(0 $margin_post, $margin_post);
+    position: relative;
+    background-color: #fff;
+    // border-radius: 8px;
+    border: 0.5px solid $gray;
+    img.avatar_class_comment{
+      position: relative;
+      width: $avatar_size/2;
+      display: inline-block;
+    }
+    .comment_information{
+      padding-left: 10px;
+      // line-height: 200%;
+      position: relative;
+      vertical-align: top;
+      display:inline-block;
+      width: 95 - $avatar_size/2;
+    }
+    p{
+      -webkit-margin-before:0.4em;
+      -webkit-margin-after:0.4em;
+
+    }
+}
+
+label {
+  color: white;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+// マイページ
+.user_post{
+    @include boxBase($margin_post $margin_post 0 $margin_post, $margin-post);
+    position: relative;
+    background-color: #fff;
+    // border-radius: 8px;
+    border: 1px solid $gray;
+
+    .edit_avator{
+      width: $avatar_size * 1.5;
+      display: inline-block;
+      text-align: center;
+    }
+
+    img.avatar_class_user{
+      position: relative;
+      width: $avatar_size * 1.5;
+      display: inline-block;
+    }
+    .user_information{
+      padding-left: 20px;
+      // line-height: 200%;
+      position: relative;
+      vertical-align: top;
+      display:inline-block;
+      width: 95 - $avatar_size * 1.5;
+    }
+}
+
+div.contents.row {
+  h2 {
+    @include boxBase(20px 0, 0);
+    font-weight: normal;
+    strong {
+      font-weight: bold;
+      padding-right: 5px;
+      font-size: 1.2em;
+    }
+  }
+  .new_user{
+  font-family: "游ゴシック", "YuGothic";
+  }
+
+  // 心拍数推移可視化
+  .graph{
+    @include boxBase(0 $margin_post, 30px);
+    background-color: white;
+    margin-top: -$margin_post;
+    border-right: 1px solid $gray;
+    border-left: 1px solid $gray;
+  }
+  // ツイート投稿の表示の設定
+  div.content_post {
+    // 投稿の余白設定
+    @include boxBase($margin_post, $margin_post);
+    position: relative;
+    background-color: #fff;
+    // border-radius: 8px;
+    border: 1px solid $gray;
+
+    img.avatar_class{
+      // 大きさ仮決め
+      width: $avatar_size;
+      // width: $image_size;
+      display: inline-block;
+    }
+
+    .post_information{
+      padding-left: 20px;
+      // line-height: 200%;
+      position: relative;
+      vertical-align: top;
+      display:inline-block;
+      width: 95 - $avatar_size;
+
+      img.tweet_image{
+        width: $tweet_image_size;
+        // height: $tweet_image_height;
+        position: relative;
+        left: (100% - $tweet_image_size)/2;
+      }
+
+      video.tweet_movie{
+        // width: $tweet_image_width;
+        width: $tweet_image_size;
+        // height: $tweet_image_height;
+        position: relative;
+        left: (100% - $tweet_image_size)/2;
+      }
+      img.detail{
+        width: 2em;
+        height: 2em;
+        display: block;
+        margin-top: 0.5em;
+        position: relative;
+        left: calc(50% - 0.75em);
+      }
+      .tweet_heart{
+        display: block;
+        position: relative;
+        img.heart_class{
+          width: 1.2em;
+          height: 1.2em;
+          position: relative;
+          bottom: -5px;
+        }
+      }
+    }
+
+    .tweet_nav{
+    position: absolute;
+    right: $margin_post;
+    top: $margin_post;
+
+      span {
+        display: block;
+        width: 210px;
+        height: 100px;
+        cursor: pointer;
+        position: relative;
+        img.arrow_class{
+          position: absolute;
+          right: 0px;
+          width: 1.2em;
+          height: 1.2em;
+        }
+        // リストを提示する
+        &:hover ul {
+          color: $accent;
+          display: block;
+        }
+      }
+      // ブロック要素部分の設定
+      // ulタグが全体の設定
+      ul {
+        display: none;
+        position: absolute;
+        // 間隔をどれくらい空けるか
+        top: 0px;
+        // どれだけずらすか
+        right: 0px;
+        border-left: 1px solid #d8d8d8;
+        border-right: 1px solid #d8d8d8;
+        // liタグが個々の要素の設定
+        li {
+          background-color: #f0f0f0;
+          // リストの中に書かれているテキストの書き方を変える
+          a {
+            // displayは要素をブロック要素
+            display: block;
+            padding: 10px 20px;
+            text-align: left;
+            border-bottom: 1px solid #d8d8d8;
+          }
+        }
+      }
+    }
+
+    span.name {
+      position: absolute;
+      right: 30px;
+      bottom: 30px;
+      z-index: 2;
+      font-size: 13px;
+      a {
+        display: block;
+        color: #aaa;
+        &:hover {
+          // どこの部分の強調か
+          text-decoration: underline;
+          color: #aaa;
+        }
+      }
+      span {
+        font-size: 9px;
+        display: block;
+      }
+    }
+  }
+
+  .success {
+    @include boxBase(20px 0 ,30px);
+    box-shadow: 0 0 10px rgba($black,0.2);
+    background-color: $white;
+    box-sizing: border-box;
+    text-align: center;
+    h3 {
+      @include baseMargin;
+    }
+  }
+}
+
+form {
+  padding: 10px 0px;
+  select{
+    width: 5em;
+    height: 2em;
+    cursor: pointer;
+  }
+  input,textarea {
+    border: 1px solid $gray;
+    border-radius: 5px;
+    font-family: "游ゴシック", "YuGothic";
+    display: inline-block;
+    @include boxBase(5px 0 15px,10px);
+  }
+  input[type="submit"] {
+    @extend .transition;
+    background-color: $accent;
+    border-radius: 20px;
+    color: #fff;
+    border: 0;
+    &:hover {
+      background-color: lighten($accent, 10%);
+    }
+  }
+}
+
+.searchcomment_textarea{
+  width: 78%;
+}
+.searchcomment_input{
+  position: relative;
+  right: 0;
+  width: 20%;
+}
+
+
+.file_input{
+  position: relative;
+  .post_input{
+    position: absolute;
+    right: 0;
+    width: 7em;
+  }
+  span{
+    padding-left: 1em;
+  }
+  .file_image{
+    display: inline-block;
+    position: relative;
+    bottom: -7px;
+    cursor: pointer;
+  }
+}
+.post_textarea{
+  width: 100%;
+}
+
+// 基本フォーマット
+.container {
+  @include boxBase($margin_post $margin_post 0 $margin_post, $margin-post);
+  background-color: $white;
+  box-sizing: border-box;
+  border: 1px solid $gray;
+  position: relative;
+}
+
+.container_marginbottom {
+  @include boxBase(0 $margin_post,30px);
+  margin-bottom: -$margin_post;
+  background-color: white;
+  box-sizing: border-box;
+  border: 2px solid $gray;
+  position: relative;
+}
+
+// 登録画面の作成
+.registration{
+  @include boxBase($margin_post 20% 0 20%,30px);
+  background-color: $white;
+  box-sizing: border-box;
+  border: 1px solid $gray;
+  position: relative;
+  text-align: center;
+}
+
+.alert{
+  text-align: center;
+  background-color: $gray;
+  @include boxBase($margin_post $margin_post 0 $margin_post, 0);
+  width: 30%;
+  position: relative;
+  left: 33%;
+}
+
+nav.pagination {
+  color: white;
+  @include baseMargin(0 $margin_post);
+  span.page{
+    color: black;
+  }
+  span.page.current{
+    color: white;
+  }
+  a{
+    color: black;
+  }
+}
+
+
+// フッターの設定
+footer {
+  @include boxBase;
+  color: white;
+  p {
+    text-align: center;
+  }
+}

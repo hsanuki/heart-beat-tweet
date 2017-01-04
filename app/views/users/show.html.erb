@@ -1,0 +1,29 @@
+<div class="contents row">
+  <div class="user_post">
+    <%= image_tag current_user.avatar, :class => "avatar_class_user"%>
+    <div class="user_information">
+      <span class="bold big"><%= current_user.account_name %></span><br>
+      <span>Fitbit登録状況：</span>
+      <% if @is_token_valid_user %>
+        <span>登録済み</span>
+        <span class="small"><%= link_to "登録解除", "/users/fitbit_revoke", method: :get %></span><br>
+      <% else %>
+        <span>未登録</span>
+        <span class="small"><%= link_to "登録", "/auth/fitbit_oauth2/", method: :get %></span><br>
+      <% end %>
+      <span>登録メールアドレス：<%= current_user.email %></span><br>
+      <% if not(current_user.hr_mean.nil?) %>
+        <span>平均心拍数：<%= current_user.hr_mean %>bpm</span>
+      <% end %>
+    </div>
+    <span class="edit_avator small"><%= link_to "画像の編集", edit_user_path(current_user) %></span>
+  </div>
+  <div class="container_marginbottom">
+    <h4><%= current_user.account_name %>さんの投稿一覧</h4>
+  </div>
+  <% @tweets.each do |tweet| %>
+    <%= render partial: "tweets/tweet", locals: { tweet: tweet } %>
+  <% end %>
+  <%= paginate(@tweets) %>
+  </div>
+</div>

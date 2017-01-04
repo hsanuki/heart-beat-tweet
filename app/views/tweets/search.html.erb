@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="form">
+    <%= form_tag('/tweets/search', method: :get) do %>
+      <textarea cols="30" name="keyword" placeholder="ランニング 120bpm" rows="1" type="text" class="searchcomment_textarea"></textarea>
+      <input type="submit" value="検索" class="searchcomment_input">
+    <% end %>
+  </div>
+  <span class="bold">トレンド</span><br>
+  <span class="small">「試験前 120bpm」「音楽 60bpm」「ゴール 110bpm」</span>
+</div>
+<% if !(@tweets.empty?) %>
+  <div class="container_marginbottom">
+    <h4>＜検索結果＞</h4>
+  </div>
+  <div class="contents row" >
+    <% @tweets.each do |tweet| %>
+      <%= render partial: "tweet", locals: { tweet: tweet } %>
+    <% end %>
+  <%= paginate(@tweets) %>
+  </div>
+<% end %>

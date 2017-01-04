@@ -1,0 +1,43 @@
+<div class="content_post">
+  <%= image_tag tweet.user.avatar, :class => "avatar_class"%>
+  <% if user_signed_in? && current_user.id == tweet.user_id %>
+    <div class="tweet_nav">
+      <span><%= image_tag("arrow.png", :class => "arrow_class")%>
+        <ul class="tweet__info">
+          <li>
+            <%= link_to '編集', "/tweets/#{tweet.id}/edit", method: :get %>
+            <%= link_to '削除', "/tweets/#{tweet.id}", method: :delete %>
+          </li>
+        </ul>
+      </span>
+    </div>
+  <% end %>
+
+  <div class="post_information">
+    <span class="bold"><%= tweet.user.account_name %></span>
+    <span class="gray"> - <%= time_ago_in_words tweet.created_at %></span>
+    <% if tweet.heartrate_flag %>
+      <span class="tweet_heart">
+        <%= image_tag("heart.png", :class => "heart_class")%>
+        <span><%= tweet.min_heartrate %>〜<%= tweet.max_heartrate %></span>
+        <span class="gray"> bpm</span>
+        <%if not(tweet.user.hr_mean.nil?)%>
+          <span class="small gray">(<%= tweet.min_heartrate - tweet.user.hr_mean%>~<%= tweet.max_heartrate - tweet.user.hr_mean%>)</span><br>
+        <% end %>
+      </span>
+    <% end %>
+    <span class="big"><%= simple_format(tweet.text) %></span>
+    <%if not(tweet.image_file_name.nil?) %>
+      <%= image_tag  tweet.image, :class => "tweet_image" %>
+    <% end %>
+
+    <%if not(tweet.movie_file_name.nil?) %>
+      <video controls class="tweet_movie">
+        <source src="<%= tweet.movie %>">
+        <p>動画を再生するにはvideoタグをサポートしたブラウザが必要です。</p>
+      </video>
+    <% end %>
+    <div class="line"></div>
+    <%= link_to image_tag("detail.png", :class => "detail"), "/tweets/#{tweet.id}", method: :get %>
+  </div>
+</div>

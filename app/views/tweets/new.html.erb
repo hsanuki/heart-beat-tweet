@@ -1,0 +1,36 @@
+<div class="contents row">
+  <div class="container">
+    <%= form_tag('/tweets', method: :post) do %>
+      <h3>
+        近況アップデート
+      </h3>
+      <!-- <input placeholder="30" type="integer" name="acqusition_beforetime_min"> -->
+      <textarea name="text" placeholder="今何してる？" rows="5" class="post_textarea"></textarea>
+      <div class="file_input">
+        <% if @is_token_valid_user %>
+          <span>心拍数取得</span>
+          <select name="acqusition_beforetime_min">
+            <option value="5">5 分前</option>
+            <option value="15">15分前</option>
+            <option value="30">30分前</option>
+            <option value="60">60分前</option>
+          </select>
+        <% end %>
+
+        <span>画像</span>
+        <label for="image">
+         <%= image_tag("image.png", :class => "file_image")%>
+          <input type="file" id="image" name="image" style="display:none;">
+        </label>
+
+        <span>動画</span>
+        <label for="movie">
+          <%= image_tag("movie.png", :class => "file_image")%>
+          <input type="file" id="movie" name="movie" style="display:none;">
+        </label>
+
+        <input type="submit" value="投稿する" class="post_input">
+      </div>
+    <% end %>
+  </div>
+</div>

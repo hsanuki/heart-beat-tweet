@@ -1,0 +1,24 @@
+<div class="contents row">
+  <div class="container">
+      <%= form_tag("/tweets/#{@tweet.id}", method: :patch ) do %>
+      <h3>
+        投稿内容の編集
+      </h3>
+      <textarea name="text" placeholder="今何してる？" rows="5" class="post_textarea"><%= @tweet.text %></textarea>
+      <div class="file_input">
+        <span>画像</span>
+        <label for="image">
+         <%= image_tag("image.png", :class => "file_image")%>
+          <input type="file" id="image" name="image" style="display:none;">
+        </label>
+
+        <span>動画</span>
+        <label for="movie">
+          <%= image_tag("movie.png", :class => "file_image")%>
+          <input type="file" id="movie" name="movie" style="display:none;">
+        </label>
+        <input type="submit" value="編集する" class="post_input">
+      </div>
+    <% end %>
+  </div>
+</div>

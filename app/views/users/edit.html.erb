@@ -1,0 +1,9 @@
+<div class="contents row">
+  <div class="container">
+    <%= form_for current_user do |f| %>
+      <h3>プロフィール画像の更新</h3>
+        <%= f.file_field :avatar, placeholder: "画像アップロード" %>
+        <input type="submit" value="画像更新">
+    <% end %>
+  </div>
+</div>

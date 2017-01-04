@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <!-- headの設定は後々更新する-->
+  <head>
+    <title>HeartBeatTweet</title>
+    <!-- ここからstyle sheetのhtmlの形式が選ばれる -->
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+    <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+    <script>
+      function delayedRedirect(){
+          window.location = "http://localhost:3000/"
+      }
+
+    </script>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="grid-center">
+        <%= link_to image_tag("heart_red.png", :class => "img_class"), "/", method: :get %>
+      </div>
+      <div class="grid-right">
+        <%= link_to image_tag("search.png", :class => "img_class"), "/tweets/search", method: :get %>
+        <%= link_to image_tag("write.png", :class => "img_class"), "/tweets/new", class: "post" %>
+      </div>
+      <div class="user_nav">
+        <span><%= image_tag("user.png", :class => "img_class")%>
+          <ul class="user__info">
+            <% if user_signed_in? %>
+              <li>
+                <a href="/users/<%= current_user.id %>">マイページ</a>
+                <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
+              </li>
+            <% else %>
+              <li>
+                <%= link_to "ログイン", new_user_session_path, class: 'post' %>
+                <%= link_to "新規登録", new_user_registration_path, class: 'post' %>
+              </li>
+            <% end %>
+          </ul>
+        </span>
+      </div>
+    </header>
+    <% if not(notice.nil?) || not(alert.nil?) %>
+        <p class="alert"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
+    <% end %>
+    <%= yield %>
+    <footer>
+      <p>
+        Copyright HeartBeatTweet 2017.
+      </p>
+    </footer>
+  </body>
+</html>
