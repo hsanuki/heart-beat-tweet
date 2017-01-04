@@ -7,10 +7,10 @@ Rails.application.configure do
     :enable_starttls_auto => true,
     :address => "smtp.gmail.com",
     :port => 587,
-    :domain => 'smtp.gmail.com',
+    :domain => 'heart-beat-tweet.herokuapp.com',
     :user_name => "sanukiharuyukisanuki@gmail.com", #ご自身のgmailアドレス
     :password => "69826982", #ご自身のgmailアドレスのパスワード
-    :authentication => 'login'
+    :authentication => 'plain'
   }
 
   # Code is not reloaded between requests.
