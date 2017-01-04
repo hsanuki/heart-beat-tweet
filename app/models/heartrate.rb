@@ -7,7 +7,7 @@ class Heartrate < ActiveRecord::Base
     require "pp"
     pp starttime
     pp endtime
-    today = Time.now.strftime("%Y-%m-%d")
+    today = Time.current.strftime("%Y-%m-%d")
     res = RestClient.get "https://api.fitbit.com/1/user/-/activities/heart/date/#{today}/1d/1min/time/#{starttime}/#{endtime}.json", {'Authorization' => "Bearer #{access_token}"}
     res_parsed = JSON.parse(res)
     pp res_parsed
