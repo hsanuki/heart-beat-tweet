@@ -6,6 +6,6 @@ class SessionsController < ApplicationController
     expires_at = Time.zone.at(auth_hash.credentials.expires_at)
     # DBに保存する
     Usertoken.create(user_id: current_user.id, access_token: access_token, refresh_token: refresh_token, expires_at: expires_at)
-    redirect_to "/"
+    redirect_to "/users/fitbit_register"
   end
 end

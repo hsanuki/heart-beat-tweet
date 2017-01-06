@@ -62,7 +62,7 @@ class TweetsController < ApplicationController
     if @is_token_valid_user then
       token = Usertoken.find_by(user_id: current_user[:id])
       # tokenが有効かどうか判定する→ダメだったら更新する
-      if Time.now() > token[:expires_at]
+      if Time.current > token[:expires_at]
         Usertoken.refresh_token(token)
       end
       heartrate = Heartrate.new

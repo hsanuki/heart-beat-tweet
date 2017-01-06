@@ -19,6 +19,9 @@ class UsersController < ApplicationController
     token.destroy
   end
 
+  def fitbit_register
+  end
+
   private
   def update_params
     params.require(:user).permit(:avatar)

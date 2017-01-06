@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "tweets/search" => "tweets#search"
   get "users/confirm" => "users#confirm" # 仮メール送信画面結果
   get "users/fitbit_revoke" => "users#fitbit_revoke"
+  get "users/fitbit_register" => "users#fitbit_register"
 
   # get 'tweets' => 'tweets#index' # 一覧表示
   # get   'tweets/new'  =>  'tweets#new'       #投稿画面
